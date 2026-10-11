@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Table Buddy">
+  <meta name="format-detection" content="telephone=no">
+  <title>Table Buddy · Palworld Card Game Counter</title>
+  <meta name="description" content="Life, Material, Ingredient and Night tracker with a match timer for in-person Palworld OFFICIAL CARD GAME matches.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main id="app" class="day">
+    <section class="panel top" data-p="1" aria-label="Player across the table"></section>
+
+    <nav class="strip" aria-label="Game controls">
+      <button class="strip-btn" id="undo" aria-label="Undo last change"><span class="ico">↶</span><span class="lbl">Undo</span></button>
+      <button class="strip-btn timer" id="timer" aria-label="Match timer"><span class="ico" id="timer-ico">▶</span><span id="timer-text">30:00</span></button>
+      <button class="strip-btn" id="night" aria-label="Toggle night"><span class="ico" id="night-ico">☀️</span><span class="lbl" id="night-lbl">Day</span></button>
+      <button class="strip-btn" id="menu" aria-label="Menu"><span class="ico">☰</span><span class="lbl" id="turn-lbl">Menu</span></button>
+    </nav>
+
+    <section class="panel bottom" data-p="0" aria-label="You"></section>
+  </main>
+
+  <template id="panel-tpl">
+    <div class="panel-inner">
+      <header class="panel-head">
+        <span class="name"></span>
+        <span class="wins"></span>
+      </header>
+      <div class="life-zone">
+        <button class="life-btn minus" aria-label="Lose 1 life"><span>−</span></button>
+        <div class="life-num" aria-live="polite"><span class="life"></span><span class="delta"></span><small>LIFE</small></div>
+        <button class="life-btn plus" aria-label="Gain 1 life"><span>+</span></button>
+      </div>
+      <div class="phase" hidden>
+        <div class="phase-steps"></div>
+        <button class="phase-next"><span class="phase-hint"></span><b class="phase-go">Next ▸</b></button>
+      </div>
+      <div class="counters">
+        <div class="counter" data-k="material">
+          <button class="c-btn" data-d="-1" aria-label="Remove Material">−</button>
+          <div class="c-val"><b>0</b><small>🪵 Material</small></div>
+          <button class="c-btn" data-d="1" aria-label="Add Material">+</button>
+        </div>
+        <div class="counter" data-k="ingredient">
+          <button class="c-btn" data-d="-1" aria-label="Remove Ingredient">−</button>
+          <div class="c-val"><b>0</b><small>🍎 Ingredient</small></div>
+          <button class="c-btn" data-d="1" aria-label="Add Ingredient">+</button>
+        </div>
+      </div>
+      <div class="cover" hidden></div>
+    </div>
+  </template>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-top">
+        <h2 id="sheet-title">Table Buddy</h2>
+        <button class="close" id="sheet-close" aria-label="Close">✕</button>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="big-action primary" id="new-game">New game</button>
+        <button class="big-action" id="reset-wins">Reset win count</button>
+      </div>
+
+      <div class="field-group">
+        <h3>Players</h3>
+        <div class="player-edit" data-p="0">
+          <label>Bottom (you)<input type="text" maxlength="14" autocomplete="off"></label>
+          <div class="swatches"></div>
+        </div>
+        <div class="player-edit" data-p="1">
+          <label>Top (across the table)<input type="text" maxlength="14" autocomplete="off"></label>
+          <div class="swatches"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3>Match timer</h3>
+        <div class="seg" id="timer-seg">
+          <button data-min="30">30 min</button>
+          <button data-min="40">40 min</button>
+          <button data-min="50">50 min</button>
+          <button data-min="0">Off</button>
+        </div>
+        <p class="note">Bushiroad recommends 30 minutes for official matches. If time runs out and nobody has won, both players lose.</p>
+        <button class="big-action" id="timer-reset">Restart timer</button>
+      </div>
+
+      <div class="field-group">
+        <h3>Other</h3>
+        <div class="seg" id="sound-seg">
+          <button data-sound="1">Sound on</button>
+          <button data-sound="0">Sound off</button>
+        </div>
+        <div class="seg" id="steps-seg">
+          <button data-steps="1">Show turn steps</button>
+          <button data-steps="0">Hide turn steps</button>
+        </div>
+      </div>
+      <p class="fine">Fan-made helper. Not affiliated with Pocketpair or Bushiroad.</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
